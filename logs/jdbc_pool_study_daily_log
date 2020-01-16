@@ -1,1 +1,5 @@
-[DEBUG] [2020-01-15 22:59:29 오후] HikariProxyConnection@230643635 wrapping com.mysql.jdbc.JDBC4Connection@384ad17b
+[TRACE] [2020-01-16 16:49:28 오후] HikariProxyPreparedStatement@1525919705 wrapping com.mysql.jdbc.ServerPreparedStatement[1] - SELECT deptno, deptname, floor from department
+[TRACE] [2020-01-16 16:49:28 오후] Department [deptNo=1, deptName=영업, floor=8]
+[TRACE] [2020-01-16 16:49:28 오후] Department [deptNo=2, deptName=기획, floor=10]
+[TRACE] [2020-01-16 16:49:28 오후] Department [deptNo=3, deptName=개발, floor=9]
+[TRACE] [2020-01-16 16:49:28 오후] Department [deptNo=4, deptName=총무, floor=7]
