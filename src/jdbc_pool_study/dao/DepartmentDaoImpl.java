@@ -40,4 +40,23 @@ public class DepartmentDaoImpl implements DepartmentDao {
 		return new Department(deptNo, deptName, floor);
 	}
 
+	@Override
+	public Department selectDepartmentByNo(Department department) throws SQLException {
+		String sql = "select deptno, deptname, floor from department where deptno=?";
+		Department selectedDepartment = null;
+		try(Connection con = MySqlDataSource.getConnection();
+				PreparedStatement pstmt = con.prepareStatement(sql);){
+			pstmt.setInt(1, department.getDeptNo());
+			
+			try(ResultSet rs = pstmt.executeQuery()){
+				LOG.trace(pstmt);
+				if(rs.next()) {
+					selectedDepartment = getDepartment(rs);
+				}
+			}
+			
+		}
+		return selectedDepartment;
+	}
+
 }

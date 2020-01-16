@@ -1,5 +1,6 @@
 package jdbc_pool_study.dao;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -32,6 +33,14 @@ public class DepartmentDaoTest {
 		for(Department d : departments) {
 			logger.trace(d);
 		}
+	}
+	
+	@Test
+	public void testSelectDepartmentByNo() throws SQLException {
+		Department devDept = new Department(3);
+		Department selectedDepartment = dao.selectDepartmentByNo(devDept);
+		Assert.assertNotNull(selectedDepartment);
+		logger.trace(selectedDepartment);
 	}
 
 }
