@@ -1,7 +1,5 @@
 package jdbc_pool_study.dao;
 
-import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,6 +20,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import jdbc_pool_study.ds.MySqlDataSource;
+import jdbc_pool_study.dto.Department;
 import jdbc_pool_study.dto.Employee;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -38,8 +37,10 @@ public class EmployeeDaoTest {
 		dao = new EmployeeDaoImpl();
 		con = MySqlDataSource.getConnection();
 		picsDir = new File(System.getProperty("user.dir")+ System.getProperty("file.separator") + "pics" + System.getProperty("file.separator"));
-		if (!picsDir.exists()) picsDir.mkdir();
-			imagesDir = new File(System.getProperty("user.dir")+ System.getProperty("file.separator") + "images" + System.getProperty("file.separator"));
+		if (!picsDir.exists()) {
+			picsDir.mkdir();
+		}
+		imagesDir = new File(System.getProperty("user.dir")+ System.getProperty("file.separator") + "images" + System.getProperty("file.separator"));
 	}
 	
 	@AfterClass
@@ -50,18 +51,45 @@ public class EmployeeDaoTest {
 	}
 
 	@Test
-	public void test05DeleteEmployee() {
-		fail("Not yet implemented");
+	public void test05DeleteEmployee() throws SQLException {
+		Employee emp = new Employee(1004);
+		int res = dao.deleteEmployee(con, emp);
+		logger.trace(res);
+		Assert.assertEquals(1, res);
 	}
 
 	@Test
 	public void test02InsertEmployee() {
-		fail("Not yet implemented");
+		int result;
+		try {
+			Employee emp = new Employee(1004, "서현진", "사원", new Employee(1003), 1500000, new Department(1), getImage("seohyunjin.jpg"));
+			result = dao.insertEmployee(con, emp);
+			logger.trace(result);
+			Assert.assertEquals(1, result);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void test04UpdateEmployee() {
-		fail("Not yet implemented");
+		Employee emp = new Employee(1004, "이유영", "대리", new Employee(3426), 3500000, new Department(1));
+		try {
+			emp.setPic(getImage("leeyouyoung.jpg"));
+			int res = dao.updateEmployee(con, emp);
+			logger.trace(res);
+			Assert.assertEquals(1, res);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
@@ -106,13 +134,14 @@ public class EmployeeDaoTest {
 		return file;
 	}
 
-	public byte[] getImage() throws FileNotFoundException, IOException {
+	public byte[] getImage(String imgName) throws FileNotFoundException, IOException {
 		byte[] pic = null;
-		File file = new File(imagesDir, "seohyunjin.jpg");
+		File file = new File(imagesDir, imgName);
 		try (InputStream is = new FileInputStream(file)){
 			pic = new byte[is.available()];
 			is.read(pic);
 		}
+		System.out.println("pic.length : " + pic.length);
 		return pic;
 	}
 
