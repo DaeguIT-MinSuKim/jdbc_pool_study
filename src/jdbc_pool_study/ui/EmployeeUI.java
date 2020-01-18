@@ -29,7 +29,7 @@ public class EmployeeUI extends JFrame implements ActionListener {
 	private EmployeeDao empDao;
 	private JButton btnAdd;
 	private EmployeeTablePanel pEmpList;
-	private int selectedRowIdx;
+//	private int selectedRowIdx;
 	private Connection con;
 	
 	public static void main(String[] args) {
