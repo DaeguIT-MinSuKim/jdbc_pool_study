@@ -20,11 +20,11 @@ public class DepartmentDaoImpl implements DepartmentDao {
 	public List<Department> selectDepartmentByAll() {
 		List<Department> lists = new ArrayList<>();
 		String sql = "SELECT deptno, deptname, floor from department";
-		try(Connection con = MySqlDataSource.getConnection();
+		try (Connection con = MySqlDataSource.getConnection();
 				PreparedStatement pstmt = con.prepareStatement(sql);
-				ResultSet rs = pstmt.executeQuery()){
+				ResultSet rs = pstmt.executeQuery()) {
 			LOG.trace(pstmt);
-			while(rs.next()) {
+			while (rs.next()) {
 				lists.add(getDepartment(rs));
 			}
 		} catch (SQLException e) {
@@ -44,19 +44,63 @@ public class DepartmentDaoImpl implements DepartmentDao {
 	public Department selectDepartmentByNo(Department department) throws SQLException {
 		String sql = "select deptno, deptname, floor from department where deptno=?";
 		Department selectedDepartment = null;
-		try(Connection con = MySqlDataSource.getConnection();
-				PreparedStatement pstmt = con.prepareStatement(sql);){
+		try (Connection con = MySqlDataSource.getConnection(); 
+				PreparedStatement pstmt = con.prepareStatement(sql);) {
 			pstmt.setInt(1, department.getDeptNo());
-			
-			try(ResultSet rs = pstmt.executeQuery()){
+
+			try (ResultSet rs = pstmt.executeQuery()) {
 				LOG.trace(pstmt);
-				if(rs.next()) {
+				if (rs.next()) {
 					selectedDepartment = getDepartment(rs);
 				}
 			}
-			
+
 		}
 		return selectedDepartment;
+	}
+
+	@Override
+	public int insertDepartment(Department department) throws SQLException {
+		String sql = "insert into department values(?, ?, ?)";
+		int rowAffected = 0;
+		try (Connection conn = MySqlDataSource.getConnection(); 
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setInt(1, department.getDeptNo());
+			pstmt.setString(2, department.getDeptName());
+			pstmt.setInt(3, department.getFloor());
+			LOG.trace(pstmt);
+			rowAffected = pstmt.executeUpdate();
+		}
+		return rowAffected;
+
+	}
+
+	@Override
+	public int updateDepartment(Department department) throws SQLException {
+		String sql = "update department set deptname=?, floor=? where deptno=?";
+		int rowAffected = 0;
+		try (Connection conn = MySqlDataSource.getConnection(); 
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, department.getDeptName());
+			pstmt.setInt(2, department.getFloor());
+			pstmt.setInt(3, department.getDeptNo());
+			LOG.trace(pstmt);
+			rowAffected = pstmt.executeUpdate();
+		}
+		return rowAffected;
+	}
+
+	@Override
+	public int deleteDepartment(int deptNo) throws SQLException {
+		String sql = "delete from department where deptno=?";
+		int rowAffected = 0;
+		try (Connection conn = MySqlDataSource.getConnection(); 
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setInt(1, deptNo);
+			LOG.trace(pstmt);
+			rowAffected = pstmt.executeUpdate();
+		}
+		return rowAffected;
 	}
 
 }

@@ -9,4 +9,10 @@ public interface DepartmentDao {
 	List<Department> selectDepartmentByAll();
 	
 	Department selectDepartmentByNo(Department department) throws SQLException;
+	
+	int insertDepartment(Department department) throws SQLException;
+	
+	int updateDepartment(Department department) throws SQLException;
+	
+	int deleteDepartment(int deptNo) throws SQLException;
 }
