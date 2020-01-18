@@ -2,6 +2,7 @@
 package jdbc_pool_study.ui.table;
 
 import java.awt.BorderLayout;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -9,28 +10,26 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-import jdbc_pool_study.dto.Department;
 import jdbc_pool_study.exception.NotItemSelectedException;
 
 @SuppressWarnings("serial")
-public class DepartmentTablePanel extends JPanel {
+public abstract class AbstractTablePanel<T> extends JPanel {
 	private JTable table;
-	private Object[] colNames;
+	protected Object[] colNames;
 	private JScrollPane scrollPane;
-	private NonEditableModel model;
+	protected NonEditableModel model;
 	
-	public DepartmentTablePanel() {
-		initComponents();
+	public AbstractTablePanel(String title) {
+		initComponents(title);
 	}
 
-	private void initComponents() {
-		setBorder(new TitledBorder(null, "부서", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+	private void initComponents(String title) {
+		setBorder(new TitledBorder(null, title, TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setLayout(new BorderLayout(0, 0));
 
 		scrollPane = new JScrollPane();
@@ -42,10 +41,11 @@ public class DepartmentTablePanel extends JPanel {
 		scrollPane.setViewportView(table);
 	}
 	
-	protected void setAlignWith() {
-		tableCellAlignment(SwingConstants.CENTER, 0, 1, 2);
-        tableSetWidth(100, 200, 100);            		
-	}
+	/**
+	 * 	tableCellAlignment(SwingConstants.CENTER, 0, 1, 2);
+        tableSetWidth(100, 200, 100); 
+	 */
+	protected abstract void setAlignWith();
 
 	protected void tableCellAlignment(int align, int... idx) {
 		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
@@ -64,8 +64,8 @@ public class DepartmentTablePanel extends JPanel {
 		}
 	}
 	
-	public void loadData(List<Department> items) {
-		colNames = new String[] { "부서 코드", "부서 명", "위치"};
+	public void loadData(List<T> items) {
+		setColumnNames();
 		Object[][] rows = new Object[items.size()][];
 		for (int i = 0; i < items.size(); i++) {
 			rows[i] = toArray(items.get(i));
@@ -75,19 +75,26 @@ public class DepartmentTablePanel extends JPanel {
 		table.setModel(model);
 		setAlignWith();
 	}
+
+	/**
+	 * colNames = new String[] { "부서 코드", "부서 명", "위치"};
+	 */
+	protected abstract void setColumnNames();
 	
 	public void setPopupMenu(JPopupMenu popUpMenu) {
 		scrollPane.setComponentPopupMenu(popUpMenu);
 		table.setComponentPopupMenu(popUpMenu);
 	}
 
-	public Department getSelectedItem(){
-		int row = getSelectedRowIndex();
+	/**
+	 * int row = getSelectedRowIndex();
 		int deptNo=	(int) model.getValueAt(row, 0);
 		String deptName = (String) model.getValueAt(row, 1);
 		int floor = (int) model.getValueAt(row, 2);
 		return new Department(deptNo, deptName, floor);
-	}
+	 * @return
+	 */
+	public abstract T getSelectedItem();
 
 	public int getSelectedRowIndex(){
 		int row = table.getSelectedRow();
@@ -95,24 +102,31 @@ public class DepartmentTablePanel extends JPanel {
 		return row;
 	}
 	
-	public void updateRow(Department item, int row) {
-		model.setValueAt(item.getDeptNo(), row, 0);
+	/**
+	 * @param item
+	 * @param row
+	 * @throws SQLException
+	 * ex)
+	 * model.setValueAt(item.getDeptNo(), row, 0);
 		model.setValueAt(item.getDeptName(), row, 1);
 		model.setValueAt(item.getFloor(), row, 2);
-	}
+	 */
+	public abstract void updateRow(T item, int row);
 
-	public void addRow(Department item) {
+	public void addRow(T item) {
 		model.addRow(toArray(item));
 	}
 
 	//새로운 방법
-	public void removeRow(){
+	public void removeRow() {
 		model.removeRow(getSelectedRowIndex());
 	}
 
-	protected Object[] toArray(Department item) {
-		return new Object[] {item.getDeptNo(), item.getDeptName(), item.getFloor()};
-	}
+	/**
+	 * @param item
+	 * @return new Object[] {item.getDeptNo(), item.getDeptName(), item.getFloor()};
+	 */
+	protected abstract Object[] toArray(T item);
 	
 	protected class NonEditableModel extends DefaultTableModel {
 		
