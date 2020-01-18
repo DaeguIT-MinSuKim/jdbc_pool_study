@@ -10,8 +10,9 @@ public class LogUtil {
 	static final Logger LOG = LogManager.getLogger();
 
 	public static void prnLog(PreparedStatement pstmt) {
-		String str = pstmt.toString().substring(pstmt.toString().lastIndexOf(": ") + 2);
+		String str = pstmt.toString().substring(pstmt.toString().lastIndexOf("- ") + 2);
 		str = str.replace("]", "");
+		LOG.info("========================================");
 		LOG.trace(str);
 	}
 

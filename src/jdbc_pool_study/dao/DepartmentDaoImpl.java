@@ -7,14 +7,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import jdbc_pool_study.ds.MySqlDataSource;
 import jdbc_pool_study.dto.Department;
+import jdbc_pool_study.util.LogUtil;
 
 public class DepartmentDaoImpl implements DepartmentDao {
-	final Logger LOG = LogManager.getLogger();
+//	final Logger LOG = LogManager.getLogger();
 
 	@Override
 	public List<Department> selectDepartmentByAll() {
@@ -23,7 +21,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 		try (Connection con = MySqlDataSource.getConnection();
 				PreparedStatement pstmt = con.prepareStatement(sql);
 				ResultSet rs = pstmt.executeQuery()) {
-			LOG.trace(pstmt);
+			LogUtil.prnLog(pstmt);
 			while (rs.next()) {
 				lists.add(getDepartment(rs));
 			}
@@ -49,7 +47,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 			pstmt.setInt(1, department.getDeptNo());
 
 			try (ResultSet rs = pstmt.executeQuery()) {
-				LOG.trace(pstmt);
+				LogUtil.prnLog(pstmt);
 				if (rs.next()) {
 					selectedDepartment = getDepartment(rs);
 				}
@@ -68,7 +66,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 			pstmt.setInt(1, department.getDeptNo());
 			pstmt.setString(2, department.getDeptName());
 			pstmt.setInt(3, department.getFloor());
-			LOG.trace(pstmt);
+			LogUtil.prnLog(pstmt);
 			rowAffected = pstmt.executeUpdate();
 		}
 		return rowAffected;
@@ -84,7 +82,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 			pstmt.setString(1, department.getDeptName());
 			pstmt.setInt(2, department.getFloor());
 			pstmt.setInt(3, department.getDeptNo());
-			LOG.trace(pstmt);
+			LogUtil.prnLog(pstmt);
 			rowAffected = pstmt.executeUpdate();
 		}
 		return rowAffected;
@@ -97,7 +95,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 		try (Connection conn = MySqlDataSource.getConnection(); 
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setInt(1, deptNo);
-			LOG.trace(pstmt);
+			LogUtil.prnLog(pstmt);
 			rowAffected = pstmt.executeUpdate();
 		}
 		return rowAffected;
@@ -111,7 +109,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 			pstmt.setInt(1, department.getDeptNo());
 			pstmt.setString(2, department.getDeptName());
 			pstmt.setInt(3, department.getFloor());
-			LOG.trace(pstmt);
+			LogUtil.prnLog(pstmt);
 			rowAffected = pstmt.executeUpdate();
 		}
 		return rowAffected;

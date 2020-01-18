@@ -7,21 +7,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import jdbc_pool_study.dto.Department;
 import jdbc_pool_study.dto.Employee;
+import jdbc_pool_study.util.LogUtil;
 
 public class EmployeeDaoImpl implements EmployeeDao {
-	final Logger LOG = LogManager.getLogger();
+//	final Logger LOG = LogManager.getLogger();
 	
 	@Override
 	public int deleteEmployee(Connection con, Employee employee) throws SQLException {
 		String sql = "delete from employee where empno = ?";
 		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 			pstmt.setInt(1, employee.getEmpNo());
-			LOG.trace(pstmt);
+			LogUtil.prnLog(pstmt);
 			return pstmt.executeUpdate();
 		} 
 	}
@@ -41,7 +39,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 			pstmt.setInt(4, employee.getManager().getEmpNo());
 			pstmt.setInt(5, employee.getSalary());
 			pstmt.setInt(6, employee.getDept().getDeptNo());
-			LOG.trace(pstmt);
+			LogUtil.prnLog(pstmt);
 			if (employee.getPic()!=null) {
 				pstmt.setBytes(7, employee.getPic());
 			}
@@ -60,7 +58,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 			pstmt.setInt(4, employee.getSalary());
 			pstmt.setInt(5, employee.getDept().getDeptNo());
 			pstmt.setInt(7, employee.getEmpNo());
-			LOG.trace(pstmt);
+			LogUtil.prnLog(pstmt);
 			pstmt.setBytes(6, employee.getPic());
 			return pstmt.executeUpdate();
 		}
@@ -72,7 +70,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		String sql = "select empno, empname, title, manager, salary, dno from employee";
 		try (PreparedStatement pstmt = con.prepareStatement(sql);
 				ResultSet rs = pstmt.executeQuery()) {
-			LOG.trace(pstmt);
+			LogUtil.prnLog(pstmt);
 			while (rs.next()) {
 				lists.add(getEmployee(rs, false));
 			}
@@ -89,7 +87,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		try (PreparedStatement pstmt = con.prepareStatement(sql)){
 			pstmt.setInt(1, employee.getEmpNo());
 			try(ResultSet rs = pstmt.executeQuery()){
-				LOG.trace(pstmt);
+				LogUtil.prnLog(pstmt);
 				if (rs.next())
 					selectedEmployee = getEmployee(rs, true);
 			}
