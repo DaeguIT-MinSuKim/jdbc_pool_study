@@ -22,6 +22,7 @@ import org.junit.runners.MethodSorters;
 import jdbc_pool_study.ds.MySqlDataSource;
 import jdbc_pool_study.dto.Department;
 import jdbc_pool_study.dto.Employee;
+import jdbc_pool_study.util.LogUtil;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EmployeeDaoTest {
@@ -107,6 +108,38 @@ public class EmployeeDaoTest {
 		}
 	} 
 
+	@Test
+	public void test06ProcedureEmployeeByDeptNoWithCursor() {
+		LogUtil.prnLog(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
+		List<Employee> lists;
+		try {
+			lists = dao.procedureEmployeeByDeptNoWithCursor(con, 1);
+			Assert.assertNotEquals(0, lists.size());
+			logger.trace(String.format("lists size = %d", lists.size()));
+			for(Employee emp : lists) {
+				logger.trace(emp);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void test07ProcedureEmployeeByDeptNo() {
+		LogUtil.prnLog(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
+		List<Employee> lists;
+		try {
+			lists = dao.procedureEmployeeByDeptNo(con, 1);
+			Assert.assertNotEquals(0, lists.size());
+			logger.trace(String.format("lists size = %d", lists.size()));
+			for(Employee emp : lists) {
+				logger.trace(emp);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Test
 	public void test03SelectEmployeeByNo() {
 		Employee emp;

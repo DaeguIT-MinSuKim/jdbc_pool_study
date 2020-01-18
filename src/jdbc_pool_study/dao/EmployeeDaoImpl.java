@@ -1,5 +1,6 @@
 package jdbc_pool_study.dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -109,5 +110,40 @@ public class EmployeeDaoImpl implements EmployeeDao {
 			emp.setPic(pic);
 		}
 		return emp;	
+	}
+
+	@Override
+	public List<Employee> procedureEmployeeByDeptNoWithCursor(Connection con, int deptNo) throws SQLException {
+		List<Employee> list = new ArrayList<>();
+		String sql = "{call procedure_cursor(?)}";
+		try(CallableStatement cs = con.prepareCall(sql);){
+			cs.setInt(1, deptNo);
+			LogUtil.prnLog(cs);
+			boolean hasResults = cs.execute();
+			while(hasResults) {
+				ResultSet rs = cs.getResultSet();
+				while(rs.next()) {
+					list.add(getEmployee(rs, false));
+				}
+				hasResults = cs.getMoreResults();
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public List<Employee> procedureEmployeeByDeptNo(Connection con, int deptNo) throws SQLException {
+		List<Employee> list = new ArrayList<>();
+		String sql = "{call procedure_01(?)}";
+		try(CallableStatement cs = con.prepareCall(sql);){
+			cs.setInt(1, deptNo);
+			LogUtil.prnLog(cs);
+			try(ResultSet rs = cs.executeQuery()){
+				while(rs.next()) {
+					list.add(getEmployee(rs, false));
+				}
+			}
+		}
+		return list;
 	}
 }

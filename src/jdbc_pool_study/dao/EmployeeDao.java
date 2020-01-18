@@ -16,4 +16,10 @@ public interface EmployeeDao {
 	List<Employee> selectEmployeeByAll(Connection con) throws SQLException;
 
 	Employee selectEmployeeByNo(Connection con, Employee employee) throws SQLException;
+	
+	List<Employee> procedureEmployeeByDeptNo(Connection con, int deptNo) throws SQLException;
+	
+	List<Employee> procedureEmployeeByDeptNoWithCursor(Connection con, int deptNo) throws SQLException;
+	
+	
 }
