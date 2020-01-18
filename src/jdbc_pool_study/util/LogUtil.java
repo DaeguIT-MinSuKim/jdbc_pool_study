@@ -1,4 +1,4 @@
-package jdbc_pool_study.dao;
+package jdbc_pool_study.util;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
