@@ -1,5 +1,6 @@
 package jdbc_pool_study.dao;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import jdbc_pool_study.ds.MySqlDataSource;
 import jdbc_pool_study.dto.Department;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -78,5 +80,20 @@ public class DepartmentDaoTest {
 		int id = dao.deleteDepartment(delDeptNo);
 		logger.trace(String.format("A Department with id %d has been deleted.", id));
 		Assert.assertEquals(1, id);
+	}
+	
+	@Test
+	public void test06insertDepartmentWithConnection() {
+		try {
+			Department newDept = new Department(10, "총무", 15);
+			Connection con = MySqlDataSource.getConnection();
+			int id = dao.insertDepartmentWithConnection(con, newDept);
+			logger.trace(String.format("A new Department with id %d has been inserted.", id));
+			Assert.assertEquals(1, id);
+			
+			dao.deleteDepartment(newDept.getDeptNo());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -103,4 +103,18 @@ public class DepartmentDaoImpl implements DepartmentDao {
 		return rowAffected;
 	}
 
+	@Override
+	public int insertDepartmentWithConnection(Connection con, Department department) throws SQLException {
+		String sql = "insert into department values(?, ?, ?)";
+		int rowAffected = 0;
+		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+			pstmt.setInt(1, department.getDeptNo());
+			pstmt.setString(2, department.getDeptName());
+			pstmt.setInt(3, department.getFloor());
+			LOG.trace(pstmt);
+			rowAffected = pstmt.executeUpdate();
+		}
+		return rowAffected;
+	}
+
 }

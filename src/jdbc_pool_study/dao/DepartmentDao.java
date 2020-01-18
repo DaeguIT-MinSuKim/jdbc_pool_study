@@ -1,5 +1,6 @@
 package jdbc_pool_study.dao;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface DepartmentDao {
 	int updateDepartment(Department department) throws SQLException;
 	
 	int deleteDepartment(int deptNo) throws SQLException;
+	
+	int insertDepartmentWithConnection(Connection con, Department department) throws SQLException;
 }
