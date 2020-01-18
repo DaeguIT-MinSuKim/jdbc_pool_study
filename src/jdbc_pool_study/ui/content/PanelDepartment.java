@@ -50,7 +50,7 @@ public class PanelDepartment extends AbstractPanel<Department> {
 	}
 
 	public void setItem(Department dept) {
-		tfDeptNo.setText(String.format("%03d", dept.getDeptNo()));
+		tfDeptNo.setText(String.format("%d", dept.getDeptNo()));
 		tfDeptName.setText(dept.getDeptName());
 		tfFloor.setText(dept.getFloor()+"");
 		tfDeptNo.setEditable(false);
@@ -67,7 +67,7 @@ public class PanelDepartment extends AbstractPanel<Department> {
 		if (nextNo == -1) {
 			tfDeptNo.setText("");
 		}else {
-			tfDeptNo.setText(String.format("%03d", nextNo));
+			tfDeptNo.setText(String.format("%d", nextNo));
 		}
 		tfDeptName.setText("");
 		tfFloor.setText("");

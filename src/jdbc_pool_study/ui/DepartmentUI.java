@@ -67,11 +67,11 @@ public class DepartmentUI extends JFrame implements ActionListener {
 		btnAdd.addActionListener(this);
 		pBtns.add(btnAdd);
 
-		JButton btnCancel = new JButton("취소");
+		btnCancel = new JButton("취소");
+		btnCancel.addActionListener(this);
 		pBtns.add(btnCancel);
 
 		pDeptList = new DepartmentTablePanel();
-//		pDeptList.setService(service);
 		pDeptList.loadData(service.listDeparments());
 		pDeptList.setPopupMenu(createPopupMenu());
 		contentPane.add(pDeptList);
@@ -100,8 +100,8 @@ public class DepartmentUI extends JFrame implements ActionListener {
 					service.removeDepartment(dept);
 					pDeptList.removeRow();
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage());
 					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1.getMessage());
 				} catch (NotItemSelectedException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 				}
@@ -115,35 +115,46 @@ public class DepartmentUI extends JFrame implements ActionListener {
 			}
 		}
 	};
+	private JButton btnCancel;
 
 	public void actionPerformed(ActionEvent e) {
-		try {
-			if (e.getSource() == btnAdd) {
-				if (e.getActionCommand().contentEquals("추가")) {
-					actionPerformedBtnAdd(e);
-				}else {
-					actionPerformedBtnUpdate(e);
-				}
+		if (e.getSource() == btnCancel) {
+			actionPerformedBtnCancel(e);
+		}
+		if (e.getSource() == btnAdd) {
+			if (e.getActionCommand().contentEquals("추가")) {
+				actionPerformedBtnAdd(e);
+			}else {
+				actionPerformedBtnUpdate(e);
 			}
+		}
+	}
+
+	private void actionPerformedBtnUpdate(ActionEvent e){
+		Department dept = pDept.getItem();
+		try {
+			service.modifyDepartment(dept);
+			pDeptList.updateRow(dept, selectedRowIdx);
+			btnAdd.setText("추가");
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-
-	}
-
-	private void actionPerformedBtnUpdate(ActionEvent e) throws SQLException {
-		Department dept = pDept.getItem();
-		service.modifyDepartment(dept);
-		
-		pDeptList.updateRow(dept, selectedRowIdx);
-		btnAdd.setText("추가");
 		pDept.clearComponent(-1);
 	}
 
-	protected void actionPerformedBtnAdd(ActionEvent e) throws SQLException {
+	protected void actionPerformedBtnAdd(ActionEvent e)  {
 		Department dept = pDept.getItem();
-		service.addDepartment(dept);
-		pDeptList.addRow(dept);
+		try {
+			service.addDepartment(dept);
+			pDeptList.addRow(dept);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null, e1.getMessage());
+		} 
+		pDept.clearComponent(-1);
+	}
+	
+	protected void actionPerformedBtnCancel(ActionEvent e) {
 		pDept.clearComponent(-1);
 	}
 }
