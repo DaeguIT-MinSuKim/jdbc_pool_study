@@ -115,9 +115,9 @@ public class EmployeeDaoTest {
 		try {
 			lists = dao.procedureEmployeeByDeptNoWithCursor(con, 1);
 			Assert.assertNotEquals(0, lists.size());
-			logger.trace(String.format("lists size = %d", lists.size()));
+			LogUtil.prnLog(String.format("lists size = %d", lists.size()));
 			for(Employee emp : lists) {
-				logger.trace(emp);
+				LogUtil.prnLog(emp);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -131,9 +131,9 @@ public class EmployeeDaoTest {
 		try {
 			lists = dao.procedureEmployeeByDeptNo(con, 1);
 			Assert.assertNotEquals(0, lists.size());
-			logger.trace(String.format("lists size = %d", lists.size()));
+			LogUtil.prnLog(String.format("lists size = %d", lists.size()));
 			for(Employee emp : lists) {
-				logger.trace(emp);
+				LogUtil.prnLog(emp);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

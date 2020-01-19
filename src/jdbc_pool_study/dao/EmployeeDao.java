@@ -21,5 +21,4 @@ public interface EmployeeDao {
 	
 	List<Employee> procedureEmployeeByDeptNoWithCursor(Connection con, int deptNo) throws SQLException;
 	
-	
 }
